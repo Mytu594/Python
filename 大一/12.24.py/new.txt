@@ -1,0 +1,13 @@
+<!DOCTYPE  html>
+<title>
+狗
+</title>
+<body>
+网页的主体<br>
+我的第一个网页 my tu  <br>
+<a  target=_blank  href="http://www.sina.com.cn"> 新浪</a> <br>
+<a  target=_blank  href="http://www.qq.com"> QQ</a><br>
+<a  target=_blank  href="http://www.gduf.org"> 广东金融学院</a> <br>
+<img  src="dog.jpg"  width="700px"  height="500px"/>
+</body>
+</html>

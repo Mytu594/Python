@@ -1,0 +1,116 @@
+python练习8
+python中有关操作系统，文件/目录管理部分的练习
+
+
+1. 观察操作系统中  CPU / 内存 使用情况
+(1) 打开windows 的 任务管理器，查看当前   CPU / 内存 使用情况；
+(2) 
+li=list(range(10000000))      #产生一个含1千万个数的列表，再查看内存情况
+li2=list(range(20000000))     #再查看内存
+del li2                 #再查看内存
+del li                  #再查看内存
+
+(3) 执行一个死循环程序，观察CPU占用率。 可以按 ctrl+c 终止死循环
+while True:
+  x=0
+
+
+
+
+2.文件复制 (假定已存在 d:\hello.txt 文件)
+def mycopyfile(file1,file2):
+    src=open(file1,"r")    #源文件
+    dst=open(file2,"w")    #目标文件
+    dst.write(src.read())  #读源文件并写入目标文件
+    src.close()
+    dst.close()
+
+
+if  __name__=="__main__":
+    # r 表示原始字符串，这样可将\视为路径，而不是转义字符
+    mycopyfile(r'd:\hello.txt' ,  r'd:\new.txt')   #将d:\hello.txt 复制得到  d:\new.txt
+    mycopyfile('d:\\hello.txt' ,  'd:\\ok.txt')    #如果不用r, 则最好将 \ 写成 \\,表示 \ 不再转义
+    print('文件已复制完成')
+
+
+#另一种文件复制方法
+import  shutil  #使用shutil模块实现文件复制
+shutil.copyfile(r'd:\hello.txt', r'd:\new2.txt') 
+
+
+3. 删除文件
+
+#删除文件. 要先引入os,  os.path 
+import  os,  os.path
+if  os.path.exists(r"d:\new.txt"):    #先判断文件是否存在
+  os.remove(r"d:\new.txt")            #如存在则删除文件
+  print('删除成功')
+
+
+4.目录的操作: os模块提供了针对目录的操作
+import  os
+常用的目录管理命令如下
+os.mkdir(dir)		#创建目录
+os.makedirs(dir)	
+os.rmdir(dir)		#删除目录
+os.listdir(dirpath)	#以列表返回指定目录下的文件名和一级子目录名
+os.getcwd()	        # 显示当前工作目录名
+os.chdir(dir)		# 切换当前目录  
+
+
+实例如下：
+
+os.mkdir(r'd:\abc')		#创建目录     
+os.makedirs (r'd:\abc\d1\d2')	#创建多级目录     d1\d2同时创建
+os.rmdir(r'd:\abc\d1\d2')	#删除目录     删除 d2
+
+
+os.listdir('d:\\')      # 列出D盘根目录
+for  x  in  os.listdir('d:\\'):
+    print(x)
+
+os.getcwd()	        # 显示当前工作目录名
+os.chdir('c:\\')        #切换当前目录到 c:\
+os.getcwd()             # 切换后，显示的当前目录应为 c:\
+
+
+import  os.path
+os.path.isfile(pathname):             #判断是否是文件。返回True则是文件, 如是目录或文件不存在则返回False
+os.path.splitext(filename)            # 分解文件名返回1个列表。列表的第0个元素是主文件名，第1个元素是后缀名
+
+实例如下：
+os.path.isfile(r'd:\hello.txt')           #判断是否存在 d:\hello.txt 文件
+li=os.path.splitext(r'd:\hello.txt')   #li[0] 为 d:\hello  li[1]为.txt
+print( li[0],  li[1])
+
+
+5. 实际应用
+（1）把当前目录中后缀名为".html"的文件修改为".htm"后缀。
+假定在 d:\abc 目录下存在一些.html 文件
+
+import  os, os.path
+os.chdir(r'd:\abc')         #切换到 d:\abc目录下
+files=os.listdir(".")       #得到当前目录下的文件名列表
+for  filename  in  files:
+    li=os.path.splitext(filename)        #分解文件名  li[0]是主文件名  li[1]是扩展名
+    if  li[1].lower()==".html":          #转小写后判断，如果后缀名为 .html
+        newname=li[0]+".htm"             # 产生新文件名  后缀为 .htm
+        os.rename(filename, newname)     # 文件改名
+
+
+（2）遍历目录,输出其下所有的子目录及文件名: 本例用自定义递归函数visitdir实现
+
+import  os
+def  visitdir(path):
+   li=os.listdir(path)         #列表包含当前目录下的文件名和一级子目录名
+   for  p  in  li:
+      pathname=os.path.join(path,p)
+      if not os.path.isfile(pathname):
+           visitdir(pathname)  #如果是目录，则递归访问
+      else  :
+           print(pathname)      #如果是文件，则输出文件名
+
+
+if  __name__=="__main__": 
+    visitdir(r'c:\python')   # 访问c:\python目录，列出所有文件名和子目录
+
